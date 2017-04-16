@@ -1,5 +1,6 @@
 runtime: go
 api_version: go1
+service: willBackend
 handelers:
 - url: /.*
   script: _go_app
