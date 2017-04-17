@@ -3,15 +3,17 @@ package WillBackend
 import (
 	_ "fmt"; _ "net/http"; _ "strings"; _ "log";
 	_ "os";
+	"io"
+	"log"
 	"net/http"
-	"fmt"
 )
 
-func main() {
+func init() {
 	http.HandleFunc("/", handleIt)
 }
 
 func handleIt(w http.ResponseWriter, r *http.Request)  {
 	r.ParseForm()
-	fmt.Println(r.Form)
+	log.Println("hit")
+	io.WriteString(w, string("<p>hello world</p>"))
 }
