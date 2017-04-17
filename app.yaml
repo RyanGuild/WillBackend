@@ -1,6 +1,5 @@
 runtime: go
 api_version: go1
-service: willBackend
 resourses:
 - cpu: 2
   memory_gb: 2
