@@ -10,6 +10,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="Go SDK" level="project" />
+    <orderEntry type="library" name="GOPATH &lt;willbackend&gt;" level="project" />
+    <orderEntry type="library" name="GOPATH &lt;WillBackend&gt;" level="project" />
     <orderEntry type="library" name="GOPATH &lt;WillBackend&gt;" level="project" />
   </component>
 </module>
