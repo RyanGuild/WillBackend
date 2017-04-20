@@ -2,5 +2,20 @@ runtime: go
 api_version: go1
 
 handlers:
+- url: /stylesheets
+  static_dir: stylesheets
+
+- url: /html
+  static_dir: html
+
+- url: /js
+  static_dir: js
+
+- url: /profs
+  static_dir: profs
+
+- url: /resourses
+  static_dir: resourses
+
 - url: /.*
   script: _go_app

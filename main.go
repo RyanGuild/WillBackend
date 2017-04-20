@@ -14,6 +14,10 @@ import (
 	"bytes"
 	_ "encoding/xml"
 	"time"
+	"google.golang.org/appengine/blobstore"
+	"google.golang.org/appengine"
+	"google.golang.org/appengine/log"
+
 )
 var profArray = []profile{}
 const (
@@ -38,26 +42,21 @@ const (
 )
 
 func init() {
-	flag.Parse()
-	switch flag.Arg(2) {
-	/*case "-t":
-		c := make(chan []byte)
-		genCard(0, c)
-		readstream()*/
-
-	default:
-	//testprof := &profile{"test2","testbio", map[string]float32{"shirt":10.50,"tie":6.00}, []string{"this","them","theOther"}}
-	//writeJson("profs/test2.json", testprof)
-		readProfs(profLocation)
-		http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("/js"))))
-		http.Handle("/html/", http.StripPrefix("/html/", http.FileServer(http.Dir("/html"))))
-		http.Handle("/resourses/", http.StripPrefix("/resourses/", http.FileServer(http.Dir("/resourses"))))
-		http.Handle("/stylesheets/", http.StripPrefix("/stylesheets/", http.FileServer(http.Dir("/stylesheets"))))
-		http.HandleFunc("/cards.htm", prepHTML)
-		http.ListenAndServe(":8080",nil)
-	}
+	readProfs(profLocation)
+	/*http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(blobstore.BlobKeyForFile())))
+	http.Handle("/html/", http.StripPrefix("/html/", http.FileServer(http.Dir("/html"))))
+	http.Handle("/resourses/", http.StripPrefix("/resourses/", http.FileServer(http.Dir("/resourses"))))
+	http.Handle("/stylesheets/", http.StripPrefix("/stylesheets/", http.FileServer(http.Dir("/stylesheets"))))
+	*/
+	http.HandleFunc("/", serveStatic)
+	http.HandleFunc("/cards.htm", prepHTML)
 }
-
+func serveStatic(w http.ResponseWriter, r *http.Request) {
+	c:= appengine.NewContext(r)
+	log.Infof(c,"static requested: %s", r.RequestURI)
+	key,_ := blobstore.BlobKeyForFile(c, r.RequestURI)
+	blobstore.Send(w,key)
+}
 
 func readProfs(filename string){
 	dir, _ := filepath.Abs(filepath.Dir(flag.Arg(0)))
