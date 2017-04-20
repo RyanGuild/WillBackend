@@ -1,7 +1,7 @@
 package main
 
 import (
-	_ "fmt"; _ "net/http"; _ "strings"; _ "log";
+	_ "fmt"; _ "net/http"; _ "strings";
 	_ "os";
 	_ "io"
 	"net/http"
@@ -11,9 +11,9 @@ import (
 	"bytes"
 	_ "encoding/xml"
 	"time"
-	"appengine/blobstore"
-	"appengine"
-
+	"google.golang.org/appengine/blobstore"
+	"google.golang.org/appengine"
+	"google.golang.org/appengine/log"
 )
 var profArray = []profile{}
 const (
@@ -62,6 +62,7 @@ func readProfs(r *http.Request) {
 		reader := blobstore.NewReader(c,key)
 		err := json.Unmarshal(readstream(reader), &p)
 		if err != nil{goto read}
+		log.Infof(c,string(p),nil)
 		profArray = append(profArray, p)
 		i++
 	}
