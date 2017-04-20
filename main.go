@@ -38,7 +38,7 @@ const (
 
 )
 
-func main() {
+func init() {
 	flag.Parse()
 	switch flag.Arg(2) {
 	/*case "-t":
@@ -55,7 +55,7 @@ func main() {
 		http.Handle("/resourses/", http.StripPrefix("/resourses/", http.FileServer(http.Dir("resourses"))))
 		http.Handle("/stylesheets/", http.StripPrefix("/stylesheets/", http.FileServer(http.Dir("stylesheets"))))
 		http.HandleFunc("/cards.htm", prepHTML)
-		http.ListenAndServe(":8080",nil)
+		//http.ListenAndServe(":8080",nil)
 	}
 }
 
@@ -63,7 +63,7 @@ func main() {
 func readProfs(filename string){
 	dir, _ := filepath.Abs(filepath.Dir(flag.Arg(0)))
 	fmt.Println(dir)
-	err := filepath.Walk(dir+`\`+filename, readJsonProf)
+	err := filepath.Walk(dir+`\profs\`+filename, readJsonProf)
 	if err != nil {
 		fmt.Printf("err: %v",err)
 	}
