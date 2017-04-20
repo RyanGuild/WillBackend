@@ -54,7 +54,7 @@ func init() {
 		http.Handle("/resourses/", http.StripPrefix("/resourses/", http.FileServer(http.Dir("/resourses"))))
 		http.Handle("/stylesheets/", http.StripPrefix("/stylesheets/", http.FileServer(http.Dir("/stylesheets"))))
 		http.HandleFunc("/cards.htm", prepHTML)
-		//http.ListenAndServe(":8080",nil)
+		http.ListenAndServe(":8080",nil)
 	}
 }
 
