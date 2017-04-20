@@ -62,10 +62,10 @@ func init() {
 
 func readProfs(filename string){
 	dir, _ := filepath.Abs(filepath.Dir(flag.Arg(0)))
-	fmt.Println(dir)
-	err := filepath.Walk(dir+`\profs\`+filename, readJsonProf)
+	//fmt.Println(dir)
+	err := filepath.Walk(dir+`\`+filename+`\`, readJsonProf)
 	if err != nil {
-		fmt.Printf("err: %v",err)
+		//fmt.Printf("err: %v",err)
 	}
 
 }
@@ -128,7 +128,7 @@ func genCard(index int, c chan string) {
 	Payload += fmt.Sprintf("<div class='profPhotoContainer' id='cardPhoto%d'> <input type='button' id='cardPrev%d'><label for='cardPrev%d'><div class='photoButton'><span>&lt;</span></div></label>",index,index,index)
 	i = 0
 	for _, url:= range profArray[index].Pics{
-		fmt.Println(url)
+		//fmt.Println(url)
 		Payload += fmt.Sprintf(`<img class="slide" src="../resourses/prof/%s" id="%dimg%d"/>`,url,index,i)
 		i++
 	}
