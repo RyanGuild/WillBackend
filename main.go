@@ -71,7 +71,6 @@ func readProfs(filename string){
 }
 
 func readJsonProf(path string, info os.FileInfo, err error) error {
-	fmt.Println("profile search visiting:     " + path)
 	var p profile
 	file, _ := os.Open(path)
 	if path[len(path)-5:] == ".json" {
