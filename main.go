@@ -6,7 +6,6 @@ import (
 	_ "io"
 	"net/http"
 	"fmt"
-	_ "google.golang.org/appengine"
 	"encoding/json"
 	"os"
 	"flag"
@@ -50,10 +49,10 @@ func init() {
 	//testprof := &profile{"test2","testbio", map[string]float32{"shirt":10.50,"tie":6.00}, []string{"this","them","theOther"}}
 	//writeJson("profs/test2.json", testprof)
 		readProfs(profLocation)
-		http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("js"))))
-		http.Handle("/html/", http.StripPrefix("/html/", http.FileServer(http.Dir("html"))))
-		http.Handle("/resourses/", http.StripPrefix("/resourses/", http.FileServer(http.Dir("resourses"))))
-		http.Handle("/stylesheets/", http.StripPrefix("/stylesheets/", http.FileServer(http.Dir("stylesheets"))))
+		http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("/js"))))
+		http.Handle("/html/", http.StripPrefix("/html/", http.FileServer(http.Dir("/html"))))
+		http.Handle("/resourses/", http.StripPrefix("/resourses/", http.FileServer(http.Dir("/resourses"))))
+		http.Handle("/stylesheets/", http.StripPrefix("/stylesheets/", http.FileServer(http.Dir("/stylesheets"))))
 		http.HandleFunc("/cards.htm", prepHTML)
 		//http.ListenAndServe(":8080",nil)
 	}
