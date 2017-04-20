@@ -440,6 +440,12 @@ input[type="submit"] {
     animation-timing-function: linear;
 }
 
+.slide{
+    display: none;
+    height: 100%;
+    width: auto;
+}
+
 @keyframes sendMail {
     
     @65%{

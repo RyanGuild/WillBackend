@@ -33,6 +33,7 @@ const (
     <body id="contentBody">`
 	cardBase = `</body>
     <script type="text/javascript" src="../js/content.js"></script>
+    <script type="text/javascript" src="../js/pics.js"></script>
 </html>`
 
 )
@@ -57,14 +58,6 @@ func main() {
 		http.ListenAndServe(":8080",nil)
 	}
 }
-
-/*func serveMain(w http.ResponseWriter, r *http.Request)  {
-	path, _ := os.Getwd()
-	path += "/html/main.html"
-	fmt.Println(path)
-	file, _:= os.Open(path)
-
-}*/
 
 
 func readProfs(filename string){
@@ -100,46 +93,6 @@ func readstream(stream io.Reader) []byte {
 
 
 
-/*func prepHTML(w http.ResponseWriter, r *http.Request){
-	var request map[string] int
-	var Cards []*card
-	c := make(chan *card)
-	defer close(c)
-	for k, _ := range r.URL.Query(){
-		err := json.Unmarshal([]byte(k), &request)
-		if err != nil {
-			fmt.Println("error in json convert: ", err)
-		}
-	}
-	index := int(request["index"])
-	count := int(request["count"])
-	top := index + count
-	if top > len(profArray) {
-		top = len(profArray)
-	}
-	for i := index; i <= top; i++{
-		fmt.Println("creating card: ", i)
-		go genCard(i, c)
-	}
-	for x := index; x <= top; x++ {
-		timeout := time.Second *1
-		select {
-		case resp := <-c:
-			Cards = append(Cards, resp)
-		case <-time.After(timeout):
-			fmt.Println("timeout reached: ", timeout)
-			goto fin
-		}
-	}
-	fin:w.Header().Add("Content-Type","test/html")
-	w.Header().Add("charset", "uft-8")
-	resp := response{Cards}
-	jcoder := json.NewEncoder(w).Encode(resp)
-	if jcoder != nil {
-		fmt.Println(jcoder)
-	}
-}*/
-
 func prepHTML(w http.ResponseWriter, r *http.Request) {
 	c := make(chan string)
 	var page string
@@ -173,10 +126,16 @@ func genCard(index int, c chan string) {
 	}
 	Payload += fmt.Sprint("</div>")
 	Payload += fmt.Sprintf("<div class='profPhotoContainer' id='cardPhoto%d'> <input type='button' id='cardPrev%d'><label for='cardPrev%d'><div class='photoButton'><span>&lt;</span></div></label>",index,index,index)
+	i = 0
+	for _, url:= range profArray[index].Pics{
+		fmt.Println(url)
+		Payload += fmt.Sprintf(`<img class="slide" src="../resourses/prof/%s" id="%dimg%d"/>`,url,index,i)
+		i++
+	}
+
 	Payload += fmt.Sprintf("<input type='button' id='cardNext%d'><label for='cardNext%d'> <div class='photoButton'>&gt;</div></label></div>",index,index)
 	Payload += fmt.Sprint("</div>")
 	Payload += fmt.Sprintf("<span class='bioTitle'>Bio:</span><div class='bioText'>%s</div></div></div>",profArray[index].Bio)
-	fmt.Println("card",index,"served")
 	c<- Payload
 }
 

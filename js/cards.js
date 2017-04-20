@@ -54,7 +54,7 @@ function initPics() {
         CardNum = parseInt(CardNum);
         console.log(CardNum);
         if (picArray[CardNum] == []){
-            e.css("background", "url(../resourses/prof"+picArray[CardNum][0]+")");
+            e.css("background", "url(../resourses/prof/"+picArray[CardNum][0]+")");
         }
         $('#cardNext'+CardNum).click(function (e) {
             
