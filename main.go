@@ -7,16 +7,12 @@ import (
 	"net/http"
 	"fmt"
 	"encoding/json"
-	"os"
-	"flag"
-	"path/filepath"
 	"io"
 	"bytes"
 	_ "encoding/xml"
 	"time"
-	"google.golang.org/appengine/blobstore"
-	"google.golang.org/appengine"
-	"google.golang.org/appengine/log"
+	"appengine/blobstore"
+	"appengine"
 
 )
 var profArray = []profile{}
@@ -42,7 +38,6 @@ const (
 )
 
 func init() {
-	readProfs(profLocation)
 	/*http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(blobstore.BlobKeyForFile())))
 	http.Handle("/html/", http.StripPrefix("/html/", http.FileServer(http.Dir("/html"))))
 	http.Handle("/resourses/", http.StripPrefix("/resourses/", http.FileServer(http.Dir("/resourses"))))
@@ -53,32 +48,24 @@ func init() {
 }
 func serveStatic(w http.ResponseWriter, r *http.Request) {
 	c:= appengine.NewContext(r)
-	log.Infof(c,"static requested: %s", r.RequestURI)
 	key,_ := blobstore.BlobKeyForFile(c, r.RequestURI)
 	blobstore.Send(w,key)
 }
 
-func readProfs(filename string){
-	dir, _ := filepath.Abs(filepath.Dir(flag.Arg(0)))
-	//fmt.Println(dir)
-	err := filepath.Walk(dir+`\`+filename+`\`, readJsonProf)
-	if err != nil {
-		//fmt.Printf("err: %v",err)
-	}
-
-}
-
-func readJsonProf(path string, info os.FileInfo, err error) error {
+func readProfs(r *http.Request) {
 	var p profile
-	file, _ := os.Open(path)
-	if path[len(path)-5:] == ".json" {
-		ret := json.Unmarshal(readstream(file), &p)
-		if ret != nil {
-			return ret
-		}
+	c := appengine.NewContext(r)
+	i := 1
+
+	for true{
+		key, _ :=blobstore.BlobKeyForFile(c,"/profs/prof"+string(i)+".json")
+		reader := blobstore.NewReader(c,key)
+		err := json.Unmarshal(readstream(reader), &p)
+		if err != nil{goto read}
 		profArray = append(profArray, p)
+		i++
 	}
-	return nil
+	read:
 }
 
 func readstream(stream io.Reader) []byte {
@@ -91,6 +78,7 @@ func readstream(stream io.Reader) []byte {
 
 
 func prepHTML(w http.ResponseWriter, r *http.Request) {
+	readProfs(r)
 	c := make(chan string)
 	var page string
 	for k, _ := range profArray {
