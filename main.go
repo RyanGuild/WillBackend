@@ -14,8 +14,10 @@ import (
 	"google.golang.org/appengine/blobstore"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
+	"golang.org/x/net/context"
 )
 var profArray = []profile{}
+var c context.Context
 const (
 	profLocation = "profs"
 	cardHead = `
@@ -47,16 +49,14 @@ func init() {
 	http.HandleFunc("/cards.htm", prepHTML)
 }
 func serveStatic(w http.ResponseWriter, r *http.Request) {
-	c:= appengine.NewContext(r)
+	c = appengine.NewContext(r)
 	key,_ := blobstore.BlobKeyForFile(c, r.RequestURI)
 	blobstore.Send(w,key)
 }
 
-func readProfs(r *http.Request) {
+func readProfs() {
 	var p profile
-	c := appengine.NewContext(r)
 	i := 1
-
 	for true{
 		key, _ :=blobstore.BlobKeyForFile(c,"/profs/prof"+string(i)+".json")
 		reader := blobstore.NewReader(c,key)
@@ -79,7 +79,7 @@ func readstream(stream io.Reader) []byte {
 
 
 func prepHTML(w http.ResponseWriter, r *http.Request) {
-	readProfs(r)
+	readProfs()
 	c := make(chan string)
 	var page string
 	for k, _ := range profArray {
