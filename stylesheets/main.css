@@ -1,0 +1,452 @@
+*{
+    padding: 0px;
+    margin: 0px;
+    border: none;
+}
+
+#headerFrame {
+    width:100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+#Header {
+    position: fixed;
+    transition: .5s ease-in-out;
+    display: flex;
+    flex-direction: row;
+    height:200px;
+    background-color: #211202;
+    box-shadow: 0px 3px 1px #d5d9e0;
+    z-index: 1000;
+    box-sizing: border-box;
+    overflow: hidden;
+    
+}
+
+#headerLogo {
+    position: absolute;
+    width: 15%;
+    left:40%;
+    margin: 20px auto;
+}
+
+#searchTop{
+    position: fixed;
+    top: 20%;
+    margin-left: -27%;
+    transition:1s ease;
+    display: flex;
+    flex-direction: row;
+    width: 30%;
+    margin-top: 3%;
+    height: 50%;
+    z-index: 1000;
+}
+#searchTop:hover {
+    margin-left: 0%;
+    display: flex;
+    flex-direction: row;
+    width: 30%;
+    margin-top: 3%;
+    height: 50%;
+}
+
+#searchBox {
+    width: 90%;
+    height: auto;
+    background-color: #e3e8ef;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-left: none;
+    box-shadow: 3px 3px 1px #d5d9e0;
+    
+}
+
+#searchLogo {
+    margin-top: 10%;
+    height: 7%;
+    background-color: #e3e8ef;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+    box-shadow: 3px 3px 1px #d5d9e0;
+}
+
+#contentFrame{
+    transition: 1s ease;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.header--hidden ~ #contentContainer{
+    top: 0px;
+    height: 100%;
+}
+
+.header{
+    position: fixed;
+    width: 100%;
+    
+    
+    -webkit-transition-duration: .5s;
+    transition-duration: .5s;
+ 
+    -webkit-transition-timing-function: cubic-bezier( 0.215, 0.610, 0.355, 1.000 );
+    transition-timing-function: cubic-bezier( 0.215, 0.610, 0.355, 1.000 );
+ 
+    -webkit-transition-property: -webkit-transform;
+    transition-property: transform;
+}
+ 
+.header--hidden{
+    -webkit-transform: translateY( -100% );
+    -ms-transform: translateY( -100% );
+    transform: translateY( -100% );
+}
+
+a#inifiniteLoader{
+    position: fixed;  
+    z-index: 2;  
+    bottom: 15px;   
+    right: 10px; 
+    display:none;
+}
+
+#headBody{
+    overflow:hidden;
+}
+
+#content {
+    padding-left: 100px;
+    overflow-y: scroll;
+    height: 100%
+}
+
+html {
+    width: 100%;
+    height: 100%;
+}
+
+#contentContainer {
+    transition: .5s ease-in-out;
+    position: fixed;
+    top: 200px;
+    left: 0px;
+    width: 100%;
+    height: 100%-200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.menuItemContainer {
+    width:100%;
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    overflow: hidden;
+    height:100%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#test {
+    height: 10000px;
+}
+
+
+
+#headerLogoContainer {
+    display: inline-block;
+    width: 30%;
+    text-align: center;
+    max-height: 100px;
+}
+
+.menuContainer {
+    height: 100%;
+    display: inline-flex;
+    text-align: center;
+    margin: auto;
+    justify-content: flex-end;
+    align-content: center;
+    flex-direction: column;
+}
+
+.menuContainer > a {
+    text-decoration: none;
+}
+
+.menuItem {
+    padding: 10px;
+    padding-top: 60px;
+    border-top: 8px solid #211202;
+    background: #211202;
+    color:#7f5228;
+    font-family: "Josefin Slab", serif;
+    font-size: 28pt;
+    transition: .1s linear;
+}
+
+.menuItem:hover {
+    border-top: 8px #ffe1b5 solid;
+    padding-top: 16px;
+    padding-left: 4px;
+    padding-right: 16px;
+    padding-bottom: 16px;
+    text-shadow: 1px 1px #ffe1b5;
+}
+
+.profContainer {
+    display: inline-flex;
+    flex-direction: column;
+    align-content: middle;
+    vertical-align: middle;
+    background: #ffe1b5;
+    height: 400px;
+    width: 600px;
+    margin-top: 1%;
+    border-radius: 20px;
+    font-family: 'Josefin Slab', serif;
+}
+
+#contentBody {
+    display: flex;
+    flex-direction: row;
+    align-content: flex-start;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.profContainer > div{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: flex-start;
+    height: 96%;
+    width: 98%;
+    border: 2px #211202 dashed;
+    border-radius: 20px;
+    box-sizing: border-box;
+    margin-left: 1%;
+    margin-top: 1%;
+}
+
+.profItemContainer {
+    display: flex;
+    flex-direction: column;
+    align-self: flex-start;
+    padding: 10px;
+    width: 50%;
+    height: 40%;
+    overflow-y: auto;
+    color: #211202;
+    font-family: 'Josefin Slab', serif;
+    font-size: 16pt
+}
+
+.profItemTitle {
+    font-size: 26pt;
+    display: block;
+    text-align: center;
+    border-bottom: 2px #211202 solid
+    
+}
+
+input[type="checkbox"] {
+    display:none;
+}
+
+
+
+input[type="checkbox"] + label span {
+    display:inline-block;
+    width:17px;
+    height:19px;
+    margin:-2px 10px 0 0;
+    vertical-align:middle;
+    background:url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/check_radio_sheet.png) left top no-repeat;
+    cursor:pointer;
+}
+
+input[type="checkbox"]:checked + label span {
+    background:url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/check_radio_sheet.png) -19px top no-repeat;
+}
+
+.itemEntry {
+    padding-top: 5px;
+}
+
+.profName {
+    display: block;
+    text-align: center;
+    font-family: 'Josefin Slab', serif;
+    font-size: 26pt;
+    padding: 5px;
+    border-bottom: 2px #211202 dashed;
+}
+
+.profPhotoContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+    width: 50%;
+    height: 40%;
+    font-size: 30pt;
+    font-weight: bolder;
+    padding: 5px;
+    background: url("../resourses/user.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    background-origin: content-box;
+}
+
+.profRow {
+    display: flex;
+    flex-direction: row;
+}
+
+input[type="Button"] {
+    display: none;
+}
+
+.photoButton {
+    background: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    color: black;
+    transition: .2s linear;
+    height: 96%;
+    padding: 2%;
+    cursor: pointer;
+}
+
+.photoButton:hover {
+    color: white;
+    background: black;
+    opacity: 30%;
+}
+
+.loadIMG{
+    transition: .2s ease-in-out;
+    height:100px;
+    width: auto;
+    padding-top: 20%
+}
+
+.bioTitle{
+    font-size: 26pt;
+}
+
+.bioText{
+    padding-top: 5px;
+    padding: 10px;
+    height:100px;
+    overflow-y: auto;
+}
+
+
+
+
+#contactContainer > div {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: flex-start;
+    height: 98.5%;
+    width: 98%;
+    border: 3px #211202 dashed;
+    border-radius: 20px;
+    box-sizing: border-box;
+    margin-left: 1%;
+    margin-top: 1%;
+}
+
+.contactElm {
+    margin: 20px;
+    
+}
+
+.contactElm[type="text"] {
+    height:40px;
+    font-size: 16pt;
+    padding-left: 10px;
+    font-family: 'Josefin Slab', serif;
+    border-radius: 5px;
+}
+
+form>span{
+    margin: 20px;
+    display: block;
+}
+
+
+
+#msg {
+    width: 70%;
+    height: 405;
+    border-radius: 8px;
+    padding: 5px;
+    font-family: 'Josefin Slab', serif;
+    font-size: 16pt; 
+}
+
+input[type="submit"] {
+    visibility: hidden;
+}
+
+.mailButton {
+    background: url("../resourses/send.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    background-origin: content-box;
+    height:7%;
+    background-clip: #ffffff;
+}
+
+.mailButton:hover {
+    transition: .1s ease-in;
+    padding-top: 10px;
+    padding-left: 10px;
+    cursor: pointer;
+}
+
+#contactContainer {
+    transition: .2s ease;
+    width: 80%;
+    background-color: #ffe1b5;
+    height: 900px;
+    border-radius:20px;
+    display: flex;
+    flex-direction:row;
+    align-content: space-around;
+    font-size: 20pt;
+    font-family: 'Josefin Slab', serif;
+    margin: 70px;
+}
+
+.contentConainer--sendMail{
+    animation-name: sendMail;
+    animation-duration: .4s;
+    animation-iteration-count: 1;
+    animation-timing-function: linear;
+}
+
+@keyframes sendMail {
+    
+    @65%{
+        margin-top:50px;
+    }
+    @100%{
+        margin-bottom: 5000px
+    }
+    
+}
