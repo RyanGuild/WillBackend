@@ -1,23 +1,22 @@
 package main
 
 import (
-	_ "fmt"; _ "net/http"; _ "strings";
+	_ "fmt"; _ "net/http"; _ "strings"; _ "log";
 	_ "os";
 	_ "io"
 	"net/http"
 	"fmt"
+	_ "google.golang.org/appengine"
 	"encoding/json"
+	"os"
+	"flag"
+	"path/filepath"
 	"io"
 	"bytes"
 	_ "encoding/xml"
 	"time"
-	"google.golang.org/appengine/blobstore"
-	"google.golang.org/appengine"
-	"google.golang.org/appengine/log"
-	"golang.org/x/net/context"
 )
 var profArray = []profile{}
-var c context.Context
 const (
 	profLocation = "profs"
 	cardHead = `
@@ -39,34 +38,50 @@ const (
 
 )
 
-func init() {
-	/*http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(blobstore.BlobKeyForFile())))
-	http.Handle("/html/", http.StripPrefix("/html/", http.FileServer(http.Dir("/html"))))
-	http.Handle("/resourses/", http.StripPrefix("/resourses/", http.FileServer(http.Dir("/resourses"))))
-	http.Handle("/stylesheets/", http.StripPrefix("/stylesheets/", http.FileServer(http.Dir("/stylesheets"))))
-	*/
-	http.HandleFunc("/", serveStatic)
-	http.HandleFunc("/cards.htm", prepHTML)
-}
-func serveStatic(w http.ResponseWriter, r *http.Request) {
-	c = appengine.NewContext(r)
-	key,_ := blobstore.BlobKeyForFile(c, r.RequestURI)
-	blobstore.Send(w,key)
+func main() {
+	flag.Parse()
+	switch flag.Arg(2) {
+	/*case "-t":
+		c := make(chan []byte)
+		genCard(0, c)
+		readstream()*/
+
+	default:
+	//testprof := &profile{"test2","testbio", map[string]float32{"shirt":10.50,"tie":6.00}, []string{"this","them","theOther"}}
+	//writeJson("profs/test2.json", testprof)
+		readProfs(profLocation)
+		http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("js"))))
+		http.Handle("/html/", http.StripPrefix("/html/", http.FileServer(http.Dir("html"))))
+		http.Handle("/resourses/", http.StripPrefix("/resourses/", http.FileServer(http.Dir("resourses"))))
+		http.Handle("/stylesheets/", http.StripPrefix("/stylesheets/", http.FileServer(http.Dir("stylesheets"))))
+		http.HandleFunc("/cards.htm", prepHTML)
+		http.ListenAndServe(":8080",nil)
+	}
 }
 
-func readProfs() {
-	var p profile
-	i := 1
-	for true{
-		key, _ :=blobstore.BlobKeyForFile(c,"/profs/prof"+string(i)+".json")
-		reader := blobstore.NewReader(c,key)
-		err := json.Unmarshal(readstream(reader), &p)
-		if err != nil{goto read}
-		log.Infof(c,string(p),nil)
-		profArray = append(profArray, p)
-		i++
+
+func readProfs(filename string){
+	dir, _ := filepath.Abs(filepath.Dir(flag.Arg(0)))
+	fmt.Println(dir)
+	err := filepath.Walk(dir+`\`+filename+`\`, readJsonProf)
+	if err != nil {
+		fmt.Printf("err: %v",err)
 	}
-	read:
+
+}
+
+func readJsonProf(path string, info os.FileInfo, err error) error {
+	fmt.Println("profile search visiting:     " + path)
+	var p profile
+	file, _ := os.Open(path)
+	if path[len(path)-5:] == ".json" {
+		ret := json.Unmarshal(readstream(file), &p)
+		if ret != nil {
+			return ret
+		}
+		profArray = append(profArray, p)
+	}
+	return nil
 }
 
 func readstream(stream io.Reader) []byte {
@@ -79,7 +94,6 @@ func readstream(stream io.Reader) []byte {
 
 
 func prepHTML(w http.ResponseWriter, r *http.Request) {
-	readProfs()
 	c := make(chan string)
 	var page string
 	for k, _ := range profArray {
@@ -114,7 +128,7 @@ func genCard(index int, c chan string) {
 	Payload += fmt.Sprintf("<div class='profPhotoContainer' id='cardPhoto%d'> <input type='button' id='cardPrev%d'><label for='cardPrev%d'><div class='photoButton'><span>&lt;</span></div></label>",index,index,index)
 	i = 0
 	for _, url:= range profArray[index].Pics{
-		//fmt.Println(url)
+		fmt.Println(url)
 		Payload += fmt.Sprintf(`<img class="slide" src="../resourses/prof/%s" id="%dimg%d"/>`,url,index,i)
 		i++
 	}
