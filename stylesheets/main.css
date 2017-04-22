@@ -431,6 +431,7 @@ input[type="submit"] {
     font-size: 20pt;
     font-family: 'Josefin Slab', serif;
     margin: 70px;
+    padding: 10px;
 }
 
 .contentConainer--sendMail{

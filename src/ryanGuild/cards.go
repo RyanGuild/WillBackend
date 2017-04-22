@@ -1,25 +1,14 @@
 package main
 
 import (
-	_ "fmt"; _ "net/http"; _ "strings";
-	_ "os";
-	_ "io"
 	"net/http"
-	"fmt"
-	"encoding/json"
-	"io"
-	"bytes"
-	_ "encoding/xml"
+	"strconv"
 	"time"
-	"google.golang.org/appengine/blobstore"
-	"google.golang.org/appengine"
-	"google.golang.org/appengine/log"
-	"golang.org/x/net/context"
+	"io"
+	"fmt"
 )
-var profArray = []profile{}
-var c context.Context
+
 const (
-	profLocation = "profs"
 	cardHead = `
 <!DOCTYPE HTML5>
 <html>
@@ -39,47 +28,26 @@ const (
 
 )
 
-func init() {
-	/*http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(blobstore.BlobKeyForFile())))
-	http.Handle("/html/", http.StripPrefix("/html/", http.FileServer(http.Dir("/html"))))
-	http.Handle("/resourses/", http.StripPrefix("/resourses/", http.FileServer(http.Dir("/resourses"))))
-	http.Handle("/stylesheets/", http.StripPrefix("/stylesheets/", http.FileServer(http.Dir("/stylesheets"))))
-	*/
-	http.HandleFunc("/", serveStatic)
-	http.HandleFunc("/cards.htm", prepHTML)
-}
-func serveStatic(w http.ResponseWriter, r *http.Request) {
-	c = appengine.NewContext(r)
-	key,_ := blobstore.BlobKeyForFile(c, r.RequestURI)
-	blobstore.Send(w,key)
-}
-
-func readProfs() {
-	var p profile
-	i := 1
-	for true{
-		key, _ :=blobstore.BlobKeyForFile(c,"/profs/prof"+string(i)+".json")
-		reader := blobstore.NewReader(c,key)
-		err := json.Unmarshal(readstream(reader), &p)
-		if err != nil{goto read}
-		log.Infof(c,string(p),nil)
-		profArray = append(profArray, p)
-		i++
+func  prepCard(w http.ResponseWriter, r *http.Request) {
+	uri := r.RequestURI
+	uri = uri[6:]
+	index, err := strconv.ParseInt(uri,10,64)
+	if err != nil {http.NotFound(w,r); return }
+	ch := make(chan string)
+	defer close(ch)
+	timeout := time.After(time.Second)
+	go genCard(int(index), ch)
+	select {
+	case data := <-ch:
+		w.Header().Set("Content-Type", "text/html; charset=uft-8")
+		io.WriteString(w,cardHead+data+cardBase)
+	case <-timeout:
+		http.NotFound(w,r)
 	}
-	read:
-}
-
-func readstream(stream io.Reader) []byte {
-	buf:= new(bytes.Buffer)
-	buf.ReadFrom(stream)
-	return buf.Bytes()
 }
 
 
-
-
-func prepHTML(w http.ResponseWriter, r *http.Request) {
-	readProfs()
+func prepCards(w http.ResponseWriter, r *http.Request) {
 	c := make(chan string)
 	var page string
 	for k, _ := range profArray {
@@ -95,7 +63,7 @@ func prepHTML(w http.ResponseWriter, r *http.Request) {
 			goto fin
 		}
 	}
-	fin:
+fin:
 	w.Header().Add("Content-Type","text/html; charset=uft-8")
 	io.WriteString(w,cardHead+page+cardBase)
 
@@ -114,7 +82,6 @@ func genCard(index int, c chan string) {
 	Payload += fmt.Sprintf("<div class='profPhotoContainer' id='cardPhoto%d'> <input type='button' id='cardPrev%d'><label for='cardPrev%d'><div class='photoButton'><span>&lt;</span></div></label>",index,index,index)
 	i = 0
 	for _, url:= range profArray[index].Pics{
-		//fmt.Println(url)
 		Payload += fmt.Sprintf(`<img class="slide" src="../resourses/prof/%s" id="%dimg%d"/>`,url,index,i)
 		i++
 	}
@@ -125,16 +92,3 @@ func genCard(index int, c chan string) {
 	c<- Payload
 }
 
-
-type profile struct{
-	Name string
-	Bio string
-	Items map[string] float32
-	Pics []string
-}
-
-
-type picContainer struct {
-	Index int
-	PhotoBucket []string
-}
