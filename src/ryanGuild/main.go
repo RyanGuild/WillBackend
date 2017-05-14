@@ -44,7 +44,7 @@ func main() {
 	http.HandleFunc("/", serveStatic)
 	http.HandleFunc("/cards.htm", prepCards)
 	http.HandleFunc("/card/", prepCard)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe("8080", nil)
 }
 
 
@@ -105,7 +105,7 @@ func prepCards(w http.ResponseWriter, r *http.Request) {
 			goto fin
 		}
 	}
-fin:
+	fin:
 	w.Header().Add("Content-Type","text/html; charset=uft-8")
 	io.WriteString(w,cardHead+page+cardBase)
 
