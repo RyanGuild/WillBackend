@@ -50,9 +50,15 @@ func main() {
 
 
 func serveStatic(w http.ResponseWriter, r *http.Request) {
+	adress := ""
+	if r.RequestURI == ""{
+		adress = "/html/main.html"
+	} else {
+		adress = r.RequestURI
+	}
 	updateProfiles(r)
 	ctx := appengine.NewContext(r)
-	key,_ := blobstore.BlobKeyForFile(ctx, r.RequestURI)
+	key,_ := blobstore.BlobKeyForFile(ctx, adress)
 	blobstore.Send(w,key)
 }
 
