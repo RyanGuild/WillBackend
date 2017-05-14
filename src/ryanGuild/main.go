@@ -44,7 +44,7 @@ func main() {
 	http.HandleFunc("/", serveStatic)
 	http.HandleFunc("/cards.htm", prepCards)
 	http.HandleFunc("/card/", prepCard)
-	http.ListenAndServe("8080", nil)
+	http.ListenAndServe(":8080", nil)
 }
 
 
