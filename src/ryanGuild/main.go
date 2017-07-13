@@ -5,9 +5,7 @@ import (
 	_ "os";
 	_ "io"
 	"net/http"
-	_ "google.golang.org/appengine"
 	"google.golang.org/appengine/blobstore"
-	"google.golang.org/appengine"
 	"io"
 	"bytes"
 	_ "encoding/xml"
@@ -57,14 +55,15 @@ func serveStatic(w http.ResponseWriter, r *http.Request) {
 		adress = r.RequestURI
 	}
 	updateProfiles(r)
-	ctx := appengine.NewContext(r)
+	ctx := r.Context()
 	key,_ := blobstore.BlobKeyForFile(ctx, adress)
+	w.Header().Set("Content-Type", "text/html; charset=uft-8")
 	blobstore.Send(w,key)
 }
 
 
 func updateProfiles(r *http.Request) {
-	ctx := appengine.NewContext(r)
+	ctx := r.Context()
 	key, _ := blobstore.BlobKeyForFile(ctx, "profs/")
 	reader := blobstore.NewReader(ctx,key)
 	fmt.Println(readstream(reader))
