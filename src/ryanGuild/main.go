@@ -42,19 +42,19 @@ func main() {
 	http.HandleFunc("/", serveStatic)
 	http.HandleFunc("/cards.htm", prepCards)
 	http.HandleFunc("/card/", prepCard)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe("localhost:8080", nil)
 }
 
 
 
 func serveStatic(w http.ResponseWriter, r *http.Request) {
 	adress := ""
-	if r.RequestURI == ""{
-		adress = "/html/main.html"
+	if r.RequestURI == "/"{
+		adress = "gs/html/main.html"
 	} else {
-		adress = r.RequestURI
+		adress = "gs/"+r.RequestURI
 	}
-	updateProfiles(r)
+	//updateProfiles(r)
 	ctx := r.Context()
 	key,_ := blobstore.BlobKeyForFile(ctx, adress)
 	w.Header().Set("Content-Type", "text/html; charset=uft-8")
@@ -62,12 +62,12 @@ func serveStatic(w http.ResponseWriter, r *http.Request) {
 }
 
 
-func updateProfiles(r *http.Request) {
+/*func updateProfiles(r *http.Request) {
 	ctx := r.Context()
 	key, _ := blobstore.BlobKeyForFile(ctx, "profs/")
 	reader := blobstore.NewReader(ctx,key)
 	fmt.Println(readstream(reader))
-}
+}*/
 
 func readstream(stream io.Reader) []byte {
 	buf:= new(bytes.Buffer)
